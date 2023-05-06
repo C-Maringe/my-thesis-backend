@@ -2,7 +2,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import pickle
-from requests import request
 
 # Creating a FastAPI instance.
 app = FastAPI()
@@ -26,15 +25,13 @@ XGB_pickle = pickle.load(open('XGB_pickle.pkl', 'rb'))
 # API routes.
 
 
-@app.route("/")
+@app.get("/")
 def index():
-    return "Casper Maringe, Thesis Backend Service"
+    return {"message": "Casper Maringe, Thesis Backend Service"}
 
 
-@app.route('/v1/api/predict', methods=['POST'])
-def predict():
-    # Get the data from the POST request.
-    data = request.get_json(force=True)
+@app.post('/v1/api/predict')
+async def predict(data: dict):
     try:
         encripted_agent_account = data['data']['encripted_agent_account']
         city = data['data']['city']
